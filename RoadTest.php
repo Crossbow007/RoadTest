@@ -213,7 +213,7 @@ function saveRecordtoTableForm(&$mysqlObj,$TableName)
 						$passengers, $incident,$dangerStatus, $speed, $cost); 
 		$success = $stmt->execute();
 		if ($success)
-		echo "Record successfully added to " . $TableName;
+		echo "<h3>Record successfully added to " . $TableName . "</h3>";
 	}
 	catch (exception $e)
     {
@@ -435,7 +435,7 @@ function displayExistingRecordForm(&$mysqlObj,$TableName)
 
 			} 
 	else {
-        echo "No record found with that license plate.";
+        echo "<h3>No record found with that license plate.</h3>";
 		    }
 	echo "</form>";  
 }
@@ -446,9 +446,10 @@ function writeChangedRecordToTable(&$mysqlObj,$TableName)
 	echo "<h2>Change Confirmation</h2>";
 	
 	if (isset($_POST['f_WriteChangedRecordToTable']) && 
-	 isset($_POST['f_LicensePlate'])) {
+	 isset($_POST['f_LicensePlate'])) 
+	 {
 		$dateTimeStamp = $_POST['f_DateStamp'] . " " .  $_POST['f_TimeStamp'];
-	$passengers = $_POST['f_Passengers'];
+	  $passengers = $_POST['f_Passengers'];
 			if (isset($_POST['f_IncidentCheckbox']))
 				$incident =  true;
  			else
@@ -473,21 +474,22 @@ function writeChangedRecordToTable(&$mysqlObj,$TableName)
 						 $licensePlateToFind); 
 		$success = $stmt->execute();
 		if ($success)
-			echo "Record successfully updated to " . $TableName;
+		echo "<h3>Record successfully added to " . $TableName . "</h3>";
+
 	}
 	catch (Exception $e)
     {
-       echo "Unable to update record to " . $TableName; 
-		}
+			echo "<h3>Unable to update record to " . $TableName. "</h3>";
+    }
 	} 
 	else {
-		echo "The form was not submitted correctly.";
-	}
+		echo "<h3>The form was not submitted correctly.</h3>";
+			}
 	
 	echo "<div id=\"buttonGroup\">";
     displayButton("f_Main", "Home", "", "Home");
   echo "</div>";
-	
+
 	echo "</form>";  
 }
 ?>

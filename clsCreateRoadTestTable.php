@@ -21,9 +21,9 @@ class clsCreateRoadTestTable
         }
         
         if ($stmt->execute()) 
-            echo "<h2>Table $TableName created.</h2>";
+            echo "<h3>Table $TableName created.</h3>";
         else
-            echo "<h2>Unable to create table $TableName.</h2>"; 
+            echo "<h3>Unable to create table $TableName.</h3>"; 
         
         $stmt->close();	
     }

@@ -113,7 +113,8 @@ input[type=time],
 	font-weight: bold;
 }
 
-h2 {
+h2,
+h3 {
 	justify-content: center;
 	text-align: center;
 }
