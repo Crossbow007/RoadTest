@@ -1,0 +1,460 @@
+<?php
+// http://localhost/RoadTestCapstoneTheShell/RoadTest.php
+// Team member:
+// Add Record Upgrade - Feature 1 - Dhanan
+// Add Record Upgrade - Feature 2 - Vaughn
+// Add Record Upgrade - Feature 3 - Aakash
+// Modify Record Upgrade  - Arnie & Kevin-
+
+require_once("./RoadTestInclude.php");
+require_once("./clsCreateRoadTestTable.php");
+// main
+date_default_timezone_set ('America/Toronto');
+$mysqlObj; 
+$TableName = "RoadTests"; 
+writeHeaders("Road Test","Driverless Car", "topdiv");
+if (isset($_POST['f_CreateTable']))
+  createTableForm($mysqlObj,$TableName);
+else
+	if (isset($_POST['f_Save'])) saveRecordtoTableForm($mysqlObj,$TableName) ;
+      else if (isset($_POST['f_AddRecord'])) addRecordForm($mysqlObj,$TableName) ;	   
+        else if (isset($_POST['f_DisplayData'])) displayDataForm ($mysqlObj,$TableName);
+		  else if (isset($_POST['f_Validate'])) validateForm($mysqlObj,$TableName);
+		   
+				else if (isset($_POST['f_ModifyRecord'])) modifyRecordForm($mysqlObj,$TableName) ;	
+			else if (isset($_POST['f_FindExistingRecord'])) displayExistingRecordForm($mysqlObj,$TableName) ;	
+		       else if (isset($_POST['f_WriteChangedRecordToTable'])) writeChangedRecordToTable($mysqlObj, $TableName) ;	
+		          else displayMainForm();
+if (isset($mysqlObj)) $mysqlObj->close();
+echo "</div><div class=\"bottomdiv\">";
+DisplayContactInfo(); 
+echo "</div>";
+echo "</body>\n";
+echo "</html>\n";
+
+function displayMainForm()
+{
+   echo "<form action=? method=post>";
+   echo "<div id=\"buttonGroup\">";
+	
+   displayButton("f_CreateTable", "Create Table", "", "Create Tables");
+   displayButton("f_AddRecord", "Add Record", "", "Add Record");
+   displayButton("f_ModifyRecord", "Modify Record", "", "Modify Record");
+   displayButton("f_DisplayData", "Display Data", "", "Display Data");
+	 echo "</div>";
+  	echo "</form>"; 
+} 
+
+function createTableForm(&$mysqlObj,$TableName)
+{
+	echo "<form action=? method=post>"; 
+	echo "<h2>Create Table Form</h2>";
+	// echo "<div class = \"flexContainer\">";
+	$createTable = new clsCreateRoadTestTable();
+	$createTable->createTheTable($mysqlObj, $TableName);
+	echo "</div>";
+	echo "<div id=\"buttonGroup\">";
+	displayButton("f_Main","Home","", "Home");
+	// echo "</div>";
+	echo "</form>"; 
+	
+}
+function validateForm(&$mysqlObj,$TableName)
+{
+	// this runs when they hit the validate button
+	addRecordForm($mysqlObj,$TableName);
+	
+}
+
+function addRecordForm(&$mysqlObj,$TableName)
+{
+	
+
+  echo "<form action=? method=post>";
+	echo "<h2>Road Test Data</h2>";
+
+	echo "<div id=\"buttonGroup\">";
+	echo "<button type = \"button\" id=\"f_Validate\" 
+	name=\"f_Validate\" onclick = \"Validate()\">Validate</button>";
+	echo "<button name = \"f_Save\" id = \"saveButton\">Save</button>";
+	displayButton("f_Main","Home","", "Home");
+	echo "</div>";
+
+	echo "<div class = \"flexContainer\">";
+	 echo "<div id = \"dataEntry\" class = \"flexItem\">";
+	echo "<div class=\"formLabel\">";
+	displayLabel("License Plate");
+	echo "</div>";
+  $defaultValue = "woof";
+	echo "<div class=\"formLabel\">";
+  echo "<input type = text name = \"f_LicensePlate\" 
+	id = \"f_LicensePlate\" Size = 5 value = \"$defaultValue\">";  
+	echo "</div>";
+	
+	echo "<div class = \"datapair\">";
+	echo "<div class=\"formLabel\">";
+	displayLabel("Date Stamp");
+	echo "</div>";
+    $defaultValue= date('Y-m-d');
+	echo "<div class=\"formLabel\">";
+	echo "<input type = date name = \"f_DateStamp\" 
+	id = \"f_DateStamp\" Size = 10 value = \"$defaultValue\" >";  
+	echo "</div>";
+	echo "</div>";
+	
+	echo "<div class = \"datapair\">";
+	echo "<div class=\"formLabel\">";
+	displayLabel("Time Stamp");
+	echo "</div>";
+	echo "<div class=\"formLabel\">";
+	displayTextbox ("time", "f_TimeStamp", 10, date('h:i')); 
+	echo "</div></div>";
+	
+	echo "<div class = \"datapair\">";
+	echo "<div class=\"formLabel\">";
+	displayLabel("Number of Passengers");
+	echo "</div>";
+
+	echo "<div class=\"formLabel\">";
+	displayTextbox ("number", "f_Passengers", 0, "3"); 
+	echo "</div>";
+    echo "</div>";
+	echo "<div class = \"datapair\">";
+	echo "<div class=\"formLabel\">";
+	displayLabel("Incident free?");
+	echo "</div>";
+  echo "<input type=checkbox id=\"f_IncidentCheckbox\" 
+	 name=\"f_IncidentCheckbox\">";
+ 	echo "</div>";
+	
+  echo "<div class = \"datapair\" >"; 
+	echo "<div class=\"formLabel\">";
+	displayLabel("Danger Status", "f_DangerStatusLabel");
+	echo "</div>";
+	$defaultValue = "Medium";
+	echo "<div class=\"formLabel\">";
+	echo "<select name=\"f_DangerStatus\" id =\"f_DangerStatus\" size=\"4\">"; 
+ 	echo "<option selected id = \"Low\" value=\"Low\">Low</option>";
+	echo "<option id = \"Medium\" value=\"Medium\">Medium</option>";
+	echo "<option id = \"High\" value=\"High\">High</option>";
+	echo "<option id = \"Critical\" value=\"Critical\">Critical</option> ";
+	echo "</select></div></div>";
+	echo "<div class = \"datapair\">";
+	echo "<div class=\"formLabel\">";
+	displayLabel("Speed (km/h)", "f_SpeedLabel");
+	echo "</div>";
+    $defaultValue = 100;
+	echo "<div class=\"formLabel\">";
+	echo "<input type = text name = \"f_Speed\" id = \"f_Speed\" 
+	Size = 5 value = \"$defaultValue\">";  
+ 	echo "</div>";
+	echo "</div>";
+	//Added Error label for improper validation
+	echo "</div>";
+	echo "<div class = \"flexItem\">";
+	DisplayLabel("","ERROR");
+	echo "</div>";
+
+// echo"<br>";
+echo "</form>";
+
+} //end addRecordForm  
+
+function saveRecordtoTableForm(&$mysqlObj,$TableName) 
+{ 
+	echo "<form action=? method=post>";
+	echo "<h2>Save Record to Table Form</h2>";
+	// type = button tells the browser not to refresh/reload the page
+
+    $passengers = $_POST['f_Passengers'];
+	$baseCost = 5000;
+	$honarariumPerPassenger = 100;
+	$cost = $baseCost + $honarariumPerPassenger * $passengers;
+	$licensePlate = $_POST['f_LicensePlate']; 
+	// dateTimeStamp is a datetime field but when it goes 
+	// through bind it has to be a string, so build a string
+	$dateTimeStamp = $_POST['f_DateStamp'] . " " .  $_POST['f_TimeStamp'];
+	$passengers = $_POST['f_Passengers'];
+	// isset avoids warning.  
+	if (isset($_POST['f_IncidentCheckbox']))
+	   $incident =  true;
+	else
+		$incident = false; 
+	switch ($_POST['f_DangerStatus'])
+	{
+		case "Low":
+			$dangerStatus = "L";
+			break;
+		case "Medium":
+			$dangerStatus = "M";
+			break;
+		case "High":
+			$dangerStatus = "H";
+			break;
+		case "Critical":
+			$dangerStatus = "C";
+			break;
+	}
+	$speed =$_POST['f_Speed'];
+	$mysqlObj = CreateConnectionObject();
+	$addRecord = "Insert Into $TableName Values (?, ?, ?, ?, ?, ?, ?)";
+	try{
+		$stmt = $mysqlObj->prepare($addRecord);  	 
+		$stmt->bind_param("ssiisdd", $licensePlate, $dateTimeStamp, 
+						$passengers, $incident,$dangerStatus, $speed, $cost); 
+		$success = $stmt->execute();
+		if ($success)
+		echo "Record successfully added to " . $TableName;
+	}
+	catch (exception $e)
+    {
+       echo "Unable to add record to " . $TableName . ". No two license plates can have the same name."; 
+	}
+	echo "<div id=\"buttonGroup\">";
+	displayButton("f_Main","Home","", "Home");
+	echo "</div>";
+	echo "</form>"; 
+   	$stmt->close();
+ } 
+ function modifyRecordForm(&$mysqlObj,$TableName)
+ {
+	 echo "<form action=? method=post>";
+	 echo "<h2>Modify Record Form</h2>";
+		// type = button tells the browser not to refresh/reload the page
+		echo "<div id=\"buttonGroup\">";
+		displayLabel("License Plate");
+		echo "<input type = text name = \"f_LicensePlate\">";
+		echo "<br>";
+		displayButton("f_FindExistingRecord","Find Existing Record","", "Find Existing Record");
+		echo "</div>";
+	 echo "</form>"; 
+ }
+
+
+function displayDataForm(&$mysqlObj, $TableName)
+{
+    echo "<form action=? method=post>";
+    echo "<h2>Display Data Form</h2>";
+    
+		echo "<div  class = \"flexItem\">";
+    $mysqlObj = createConnectionObject(); 
+    if (!$mysqlObj) {
+        // Handle error - MySQL connection failed
+        echo "<p>Database connection failed.</p>";
+        return;
+    }
+
+    $query = "SELECT licensePlate, dateTimeStamp, nbrPassengers, incidentFree, 
+              dangerStatus, speed, cost FROM $TableName ORDER BY dangerStatus DESC";
+    $stmt = $mysqlObj->prepare($query);
+
+    if (!$stmt) {
+        // Handle error - Query preparation failed
+        echo "<p>Failed to prepare the query.</p>";
+        return;
+    }
+
+    $stmt->bind_result($licensePlate, $dateTimeStamp, $nbrPassengers, 
+                       $incidentFree, $dangerStatus, $speed, $cost);
+    $stmt->execute();
+
+    echo "<div class=\"table-container\">";
+    echo "<table border=\"1\"><tr><th>License Plate</th><th>Date/Time Stamp</th>
+          <th># Passengers</th><th>Incident Free</th><th>Danger Status</th>
+          <th>Speed</th><th>Cost</th></tr>";
+
+    while ($stmt->fetch()) {
+        $dateTimeStamp = str_replace(" ", " at ", $dateTimeStamp);
+        echo "<tr><td>$licensePlate</td><td>$dateTimeStamp</td>
+              <td>$nbrPassengers</td>";
+        echo "<td>" . ($incidentFree ? "Yes" : "No") . "</td>";
+        switch ($dangerStatus) {
+            case "L":
+                $dangerStatus = "Low";
+                break;
+            case "M":
+                $dangerStatus = "Medium";
+                break;
+            case "H":
+                $dangerStatus = "High";
+                break;
+            case "C":
+                $dangerStatus = "Critical";
+                break;
+        }
+        echo "<td>$dangerStatus</td><td>$speed</td><td>$cost</td></tr>";
+    }
+
+    echo "</table>";
+    echo "</div>";
+		echo "<div id=\"buttonGroup\">";
+    displayButton("f_Main", "Home", "", "Home");
+    echo "</div>";
+    $stmt->close(); 
+		echo "</div>";
+		
+    echo "</form>";  
+}
+
+function displayExistingRecordForm(&$mysqlObj,$TableName)
+{
+	
+	echo "<form action=? method=post>";
+	echo "<h2>Edit Record Form</h2>";
+	echo "<div id=\"buttonGroup\">";
+	echo "<button name = \"f_WriteChangedRecordToTable\" id = \"f_WriteChangedRecordToTable\">Write Changed Record</button>";
+	displayButton("f_Main","Home","", "Home");
+	echo "</div>";
+
+
+	$mysqlObj = createConnectionObject();
+	$licensePlateToFind = $_POST['f_LicensePlate'];
+    $query = "SELECT * FROM $TableName WHERE licensePlate = ?";
+    $stmt = $mysqlObj->prepare($query);
+    $stmt->bind_param("s", $licensePlateToFind);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        $record = $result->fetch_assoc();
+        
+
+		$dateTimeString = htmlspecialchars($record['dateTimeStamp']);
+		// Create a DateTime object from your string
+		$dateTime = new DateTime($dateTimeString);
+		// Format date and time separately
+		$date = $dateTime->format('Y-m-d');
+		$time = $dateTime->format('H:i:s');
+		
+		echo "<div id = \"dataEntry\" class = \"flexItem\">";
+		echo "<div class=\"formLabel\">";
+		displayLabel("License Plate");
+		echo "</div>";
+
+		echo "<div class=\"formLabel\">";
+		echo "<input type='text' name='f_LicensePlate' value='" . htmlspecialchars($record['licensePlate']) . "' />";
+		echo "</div>";
+		
+		echo "<div class = \"datapair\">";
+		echo "<div class=\"formLabel\">";
+		displayLabel("Date Stamp");
+		echo "</div>";
+
+		echo "<div class=\"formLabel\">";
+		echo "<input type = date name = \"f_DateStamp\" id = \"f_DateStamp\" Size = 10 value = \"$date\" >";  
+		echo "</div>";
+		echo "</div>";
+		
+		echo "<div class = \"datapair\">";
+		echo "<div class=\"formLabel\">";
+		displayLabel("Time Stamp");
+		echo "</div>";
+		echo "<div class=\"formLabel\">";
+		displayTextbox ("time", "f_TimeStamp", 10, $time); 
+		echo "</div></div>";
+		
+		echo "<div class = \"datapair\">";
+		echo "<div class=\"formLabel\">";
+		displayLabel("Number of Passengers");
+		echo "</div>";
+
+		echo "<div class=\"formLabel\">";
+		displayTextbox ("number", "f_Passengers", 0, htmlspecialchars($record['nbrPassengers'])); 
+		echo "</div>";
+		echo "</div>";
+
+		$incidentFree = htmlspecialchars($record['incidentFree']);
+		$incidentFreeValue =  ($incidentFree == 1) ? "checked" : "";
+	
+		echo "<div class = \"datapair\">";
+		echo "<div class=\"formLabel\">";
+		displayLabel("Incident free?");
+		echo "</div>";
+		echo "<input type=checkbox id=\"f_IncidentCheckbox\" name=\"f_IncidentCheckbox\"" . $incidentFreeValue . ">";
+		echo "</div>";
+		
+		$selectedDangerStatus = htmlspecialchars($record['dangerStatus']);
+
+		echo "<div class = \"datapair\" >"; 
+		echo "<div class=\"formLabel\">";
+		displayLabel("Danger Status", "f_DangerStatusLabel");
+		echo "</div>";
+		echo "<div class=\"formLabel\">";
+		echo "<select name=\"f_DangerStatus\" id =\"f_DangerStatus\" size=\"4\">"; 
+		echo "<option " . ($selectedDangerStatus == "L" ? 'selected' : '') . " id = \"Low\" value=\"Low\">Low</option>";
+		echo "<option " . ($selectedDangerStatus == "M" ? 'selected' : '') . " id = \"Medium\" value=\"Medium\">Medium</option>";
+		echo "<option " . ($selectedDangerStatus == "H" ? 'selected' : '') . " id = \"High\" value=\"High\">High</option>";
+		echo "<option " . ($selectedDangerStatus == "C" ? 'selected' : '') . " id = \"Critical\" value=\"Critical\">Critical</option> ";
+		echo "</select></div></div>";
+		echo "<div class = \"datapair\">";
+		echo "<div class=\"formLabel\">";
+		displayLabel("Speed (km/h)", "f_SpeedLabel");
+		echo "</div>";
+
+		$speed = htmlspecialchars($record['speed']);
+		echo "<div class=\"formLabel\">";
+		echo "<input type = text name = \"f_Speed\" id = \"f_Speed\" Size = 5 value = " . htmlspecialchars($record['speed']) . " />";
+		echo "</div>";
+		echo "</div>";
+		echo "</div>";
+
+
+		//displayLabel("Display data entry controls so user can make changes. No validation on this page.");
+	} else {
+        echo "No record found with that license plate.";
+		
+    }
+	
+	// type = button tells the browser not to refresh/reload the page
+	echo "</form>";  
+}
+
+function writeChangedRecordToTable(&$mysqlObj,$TableName) 
+{
+	$mysqlObj = CreateConnectionObject();
+	echo "<form action=? method=post>";
+	echo "<h2>Change Confirmation</h2>";
+	
+	if (isset($_POST['f_WriteChangedRecordToTable']) && 
+	 isset($_POST['f_LicensePlate'])) {
+		$dateTimeStamp = $_POST['f_DateStamp'] . " " .  $_POST['f_TimeStamp'];
+	$passengers = $_POST['f_Passengers'];
+	if (isset($_POST['f_IncidentCheckbox']))
+	$incident =  true;
+ 	else
+	 $incident = false; 
+	$dangerStatus = $_POST['f_DangerStatus'];
+	$speed =$_POST['f_Speed'];
+	$baseCost = 5000;
+	$honarariumPerPassenger = 100;
+	$cost = $baseCost + $honarariumPerPassenger * $passengers;
+	$licensePlateToFind = $_POST['f_LicensePlate'];
+
+	$updateRecord = "UPDATE $TableName SET dateTimeStamp = ?, nbrPassengers = ? , 
+	 incidentFree = ?, 
+					dangerStatus = ?, speed = ?, cost = ? 	WHERE licensePlate = ?";
+					
+	$stmt = new mysqli_stmt($mysqlObj);
+	
+	try{
+		$stmt = $mysqlObj->prepare($updateRecord);  	 
+		$stmt->bind_param("siisdds", $dateTimeStamp, 
+						$passengers, $incident, $dangerStatus, $speed, $cost, 
+						 $licensePlateToFind); 
+		$success = $stmt->execute();
+		if ($success)
+		echo "Record successfully updated to " . $TableName;
+	}
+	catch (Exception $e)
+    {
+       echo "Unable to update record to " . $TableName; 
+	}
+	} else {
+		echo "The form was not submitted correctly.";
+	}
+	//displayLabel("Tell user if change was successful.");
+	echo "<div id=\"buttonGroup\">";
+    displayButton("f_Main", "Home", "", "Home");
+    echo "</div>";
+		echo "</form>";  
+}
+?>
