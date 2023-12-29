@@ -34,6 +34,7 @@ function DisplayTextbox($boxType, $Name, $Size, $Value=0)
 { 
   echo "<input type = $boxType name = \"$Name\" Size = $Size value = \"$Value\">";  
 }
+
 function DisplayImage($Filename, $Alt, $Height="400", $Width="400")
 {
 	echo "<img src=$Filename alt=$Alt height = $Height width = $Width>"; 
@@ -65,12 +66,14 @@ function DisplayContactInfo()
     </footer>
     ";
 }
+
 function WriteFooters()
 {
   DisplayContactInfo(); 
   echo "</body>\n";
   echo "</html>\n";
 }
+
 function CreateConnectionObject()
 {
 	$fh = fopen('auth.txt','r');
