@@ -8,30 +8,39 @@
 
 require_once("./RoadTestInclude.php");
 require_once("./clsCreateRoadTestTable.php");
+
 // main
 date_default_timezone_set ('America/Toronto');
-$mysqlObj; 
+$mysqlObj = CreateConnectionObject();
 $TableName = "RoadTests"; 
 writeHeaders("Road Test","Driverless Car", "topdiv");
 if (isset($_POST['f_CreateTable']))
   createTableForm($mysqlObj,$TableName);
 else
-	if (isset($_POST['f_Save'])) saveRecordtoTableForm($mysqlObj,$TableName) ;
-      else if (isset($_POST['f_AddRecord'])) addRecordForm($mysqlObj,$TableName) ;	   
-        else if (isset($_POST['f_DisplayData'])) displayDataForm ($mysqlObj,$TableName);
-		  else if (isset($_POST['f_Validate'])) validateForm($mysqlObj,$TableName);
-		   
-				else if (isset($_POST['f_ModifyRecord'])) modifyRecordForm($mysqlObj,$TableName) ;	
-			else if (isset($_POST['f_FindExistingRecord'])) displayExistingRecordForm($mysqlObj,$TableName) ;	
-		       else if (isset($_POST['f_WriteChangedRecordToTable'])) writeChangedRecordToTable($mysqlObj, $TableName) ;	
-		          else displayMainForm();
-if (isset($mysqlObj)) $mysqlObj->close();
+	if (isset($_POST['f_Save'])) 
+	     saveRecordtoTableForm($mysqlObj,$TableName) ;
+  	else if (isset($_POST['f_AddRecord'])) 
+	     addRecordForm($mysqlObj,$TableName) ;	   
+  	else if (isset($_POST['f_DisplayData']))
+	     displayDataForm ($mysqlObj,$TableName);
+		else if (isset($_POST['f_Validate'])) 
+	     validateForm($mysqlObj,$TableName);
+		else if (isset($_POST['f_ModifyRecord'])) 
+	     modifyRecordForm($mysqlObj,$TableName) ;	
+		else if (isset($_POST['f_FindExistingRecord'])) 
+	     displayExistingRecordForm($mysqlObj,$TableName) ;	
+		else if (isset($_POST['f_WriteChangedRecordToTable'])) 
+	     writeChangedRecordToTable($mysqlObj, $TableName) ;	
+	else displayMainForm();
+	CloseConnection($mysqlObj);
+	
 echo "</div><div class=\"bottomdiv\">";
 DisplayContactInfo(); 
 echo "</div>";
 echo "</body>\n";
 echo "</html>\n";
 
+// functions
 function displayMainForm()
 {
    echo "<form action=? method=post>";
@@ -41,31 +50,31 @@ function displayMainForm()
    displayButton("f_AddRecord", "Add Record", "", "Add Record");
    displayButton("f_ModifyRecord", "Modify Record", "", "Modify Record");
    displayButton("f_DisplayData", "Display Data", "", "Display Data");
+
 	 echo "</div>";
-  	echo "</form>"; 
+   echo "</form>"; 
 } 
 
 function createTableForm(&$mysqlObj,$TableName)
 {
 	echo "<form action=? method=post>"; 
 	echo "<h2>Create Table Form</h2>";
-	// echo "<div class = \"flexContainer\">";
+	
 	$createTable = new clsCreateRoadTestTable();
 	$createTable->createTheTable($mysqlObj, $TableName);
-	echo "</div>";
+	
 	echo "<div id=\"buttonGroup\">";
 	displayButton("f_Main","Home","", "Home");
-	// echo "</div>";
+	echo "</div>";
 	echo "</form>"; 
 	
 }
+//? how to get validation
 function validateForm(&$mysqlObj,$TableName)
 {
-	// this runs when they hit the validate button
-	addRecordForm($mysqlObj,$TableName);
-	
+		addRecordForm($mysqlObj,$TableName);
 }
-
+//---
 function addRecordForm(&$mysqlObj,$TableName)
 {
 	
@@ -196,7 +205,7 @@ function saveRecordtoTableForm(&$mysqlObj,$TableName)
 			break;
 	}
 	$speed =$_POST['f_Speed'];
-	$mysqlObj = CreateConnectionObject();
+	// $mysqlObj = CreateConnectionObject();
 	$addRecord = "Insert Into $TableName Values (?, ?, ?, ?, ?, ?, ?)";
 	try{
 		$stmt = $mysqlObj->prepare($addRecord);  	 
@@ -237,7 +246,7 @@ function displayDataForm(&$mysqlObj, $TableName)
     echo "<h2>Display Data Form</h2>";
     
 		echo "<div  class = \"flexItem\">";
-    $mysqlObj = createConnectionObject(); 
+    // $mysqlObj = createConnectionObject(); 
     if (!$mysqlObj) {
         // Handle error - MySQL connection failed
         echo "<p>Database connection failed.</p>";
@@ -302,12 +311,13 @@ function displayExistingRecordForm(&$mysqlObj,$TableName)
 	echo "<form action=? method=post>";
 	echo "<h2>Edit Record Form</h2>";
 	echo "<div id=\"buttonGroup\">";
-	echo "<button name = \"f_WriteChangedRecordToTable\" id = \"f_WriteChangedRecordToTable\">Write Changed Record</button>";
+	echo "<button name = \"f_WriteChangedRecordToTable\" 
+	id = \"f_WriteChangedRecordToTable\">Write Changed Record</button>";
 	displayButton("f_Main","Home","", "Home");
 	echo "</div>";
 
 
-	$mysqlObj = createConnectionObject();
+	// $mysqlObj = createConnectionObject();
 	$licensePlateToFind = $_POST['f_LicensePlate'];
     $query = "SELECT * FROM $TableName WHERE licensePlate = ?";
     $stmt = $mysqlObj->prepare($query);
@@ -410,7 +420,7 @@ function displayExistingRecordForm(&$mysqlObj,$TableName)
 
 function writeChangedRecordToTable(&$mysqlObj,$TableName) 
 {
-	$mysqlObj = CreateConnectionObject();
+	// $mysqlObj = CreateConnectionObject();
 	echo "<form action=? method=post>";
 	echo "<h2>Change Confirmation</h2>";
 	
@@ -454,7 +464,7 @@ function writeChangedRecordToTable(&$mysqlObj,$TableName)
 	//displayLabel("Tell user if change was successful.");
 	echo "<div id=\"buttonGroup\">";
     displayButton("f_Main", "Home", "", "Home");
-    echo "</div>";
-		echo "</form>";  
+  echo "</div>";
+	echo "</form>";  
 }
 ?>

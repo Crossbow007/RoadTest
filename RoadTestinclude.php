@@ -38,17 +38,19 @@ function DisplayImage($Filename, $Alt, $Height="400", $Width="400")
 {
 	echo "<img src=$Filename alt=$Alt height = $Height width = $Width>"; 
 }
-function DisplayButton($Name, $Text, $Filename="", $Alt="",$enabled="enabled")
+
+function DisplayButton($Name, $Text, $Filename="", $enabled="enabled")
 {
 	if ($Filename == "") 
 	  echo "<button id=\"$Name\" name = \"$Name\" $enabled>$Text</button>";
-	// else
-	// {
-	//   echo "<button id=\"$Name\" name = \"$Name\" $enabled>"; 
-	//   DisplayImage($Filename,$Alt,35,85);
-	//   echo "</button>";
-	// }
+	else
+	{
+	  echo "<button id=\"$Name\" name = \"$Name\" $enabled>"; 
+	  DisplayImage($Filename,$Alt,35,85);
+	  echo "</button>";
+	}
 }
+
 function DisplayContactInfo()
 {
   echo"
@@ -88,5 +90,9 @@ function CreateConnectionObject()
 		exit;
 	}
 	return ($mysqlObj);
+}
+
+function CloseConnection(&$mysqlObj) {
+	$mysqlObj->close();
 }
 ?>
