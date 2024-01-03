@@ -40,16 +40,25 @@ function DisplayImage($Filename, $Alt, $Height="400", $Width="400")
 	echo "<img src=$Filename alt=$Alt height = $Height width = $Width>"; 
 }
 
-function DisplayButton($Name, $Text, $Filename="", $enabled="enabled")
-{
-	if ($Filename == "") 
-	  echo "<button id=\"$Name\" name = \"$Name\" $enabled>$Text</button>";
-	else
-	{
-	  echo "<button id=\"$Name\" name = \"$Name\" $enabled>"; 
-	  DisplayImage($Filename,$Alt,35,85);
-	  echo "</button>";
+// function DisplayButton($Name, $Text, $Filename="", $enabled="enabled")
+// {
+// 	if ($Filename == "") 
+// 	  echo "<button id=\"$Name\" name = \"$Name\" $enabled>$Text</button>";
+// 	else
+// 	{
+// 	  echo "<button id=\"$Name\" name = \"$Name\" $enabled>"; 
+// 	  DisplayImage($Filename,$Alt,35,85);
+// 	  echo "</button>";
+// 	}
+// }
+
+function DisplayButton($Name, $Text, $Filename="", 
+											$Alt="", $enabled="disabled") {
+	echo "<button id=\"$Name\" name = \"$Name\" $enabled>";
+	if ($Filename != "") {
+			DisplayImage($Filename, $Alt, 35, 85);
 	}
+	echo "$Text</button>";
 }
 
 function DisplayContactInfo()
@@ -60,8 +69,7 @@ function DisplayContactInfo()
 		Arnie & Kevin(Task 4).</p>
 		
     <p> Questions? Comments? Contact Kevin Gao: 
-    <a href=\"mailto:kevin.gao@student.sl.on.ca\" style=
-    \"color:rgb(233, 46, 180);\">
+    <a href=\"mailto:kevin.gao@student.sl.on.ca\">
     kevin.gao@student.sl.on.ca</a></p> 
     </footer>
     ";

@@ -46,10 +46,10 @@ function displayMainForm()
    echo "<form action=? method=post>";
    echo "<div id=\"buttonGroup\">";
 	
-   displayButton("f_CreateTable", "Create Table", "", "Create Tables");
-   displayButton("f_AddRecord", "Add Record", "", "Add Record");
-   displayButton("f_ModifyRecord", "Modify Record", "", "Modify Record");
-   displayButton("f_DisplayData", "Display Data", "", "Display Data");
+   displayButton("f_CreateTable", "Create Table", "", "Create Tables","enabled");
+   displayButton("f_AddRecord", "Add Record", "", "Add Record","enabled");
+   displayButton("f_ModifyRecord", "Modify Record", "", "Modify Record","enabled");
+   displayButton("f_DisplayData", "Display Data", "", "Display Data","enabled");
 
 	 echo "</div>";
    echo "</form>"; 
@@ -64,7 +64,7 @@ function createTableForm(&$mysqlObj,$TableName)
 	$createTable->createTheTable($mysqlObj, $TableName);
 	
 	echo "<div id=\"buttonGroup\">";
-	displayButton("f_Main","Home","", "Home");
+	displayButton("f_Main","Home","", "Home","enabled");
 	echo "</div>";
 	echo "</form>"; 
 	
@@ -85,8 +85,10 @@ function addRecordForm(&$mysqlObj,$TableName)
 	echo "<div id=\"buttonGroup\">";
 	echo "<button type = \"button\" id=\"f_Validate\" 
 	name=\"f_Validate\" onclick = \"Validate()\">Validate</button>";
-	displayButton("f_Save","Save","", "saveButton");
-	displayButton("f_Main","Home","", "Home");
+	
+	displayButton("f_Save", "Save", "","saveButton", "enabled");
+	//echo "<button id=\"f_Save\">Save</button>";
+	displayButton("f_Main","Home","", "Home","enabled");
 	echo "</div>";
 
 	echo "<div class = \"flexContainer\">";
@@ -222,7 +224,7 @@ function saveRecordtoTableForm(&$mysqlObj,$TableName)
 	}
 
 	echo "<div id=\"buttonGroup\">";
-	displayButton("f_Main","Home","", "Home");
+	displayButton("f_Main","Home","", "Home","enabled");
 	echo "</div>";
 
 	echo "</form>"; 
@@ -239,7 +241,7 @@ function saveRecordtoTableForm(&$mysqlObj,$TableName)
 		displayLabel("License Plate");
 		echo "<input type = text name = \"f_LicensePlate\">";
 		displayButton("f_FindExistingRecord","Find Existing Record","",
-		 "Find Existing Record");
+		 "Find Existing Record","enabled");
 		echo "</div>";
 	  echo "</form>"; 
  }
@@ -313,7 +315,7 @@ function displayDataForm(&$mysqlObj, $TableName)
     echo "</div>";
 
 		echo "<div id=\"buttonGroup\">";
-    displayButton("f_Main", "Home", "", "Home");
+    displayButton("f_Main", "Home", "", "Home","enabled");
     echo "</div>";
 
     $stmt->close(); 
@@ -329,8 +331,8 @@ function displayExistingRecordForm(&$mysqlObj,$TableName)
 
 	echo "<div id=\"buttonGroup\">";
 	displayButton("f_WriteChangedRecordToTable","Write Changed Record",
-	"", "Write Changed Record");
-	displayButton("f_Main","Home","", "Home");
+	"", "Write Changed Record","enabled");
+	displayButton("f_Main","Home","", "Home","enabled");
 	echo "</div>";
 
 
@@ -487,7 +489,7 @@ function writeChangedRecordToTable(&$mysqlObj,$TableName)
 			}
 	
 	echo "<div id=\"buttonGroup\">";
-    displayButton("f_Main", "Home", "", "Home");
+    displayButton("f_Main", "Home", "", "Home","enabled");
   echo "</div>";
 
 	echo "</form>";  

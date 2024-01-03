@@ -3,16 +3,35 @@
 function showHideControls() {
 
 }
+
+
 function hideSaveButton() {
-  let saveBtn = document.querySelector("#saveButton");
-  //sets button disabled by default
-  saveBtn.setAttribute("disabled", "");
+  console.log("hideSaveButton function called.");
+  let saveBtn = document.querySelector("#f_Save");
+  console.log("Save button element:", saveBtn);
 
-  //checks for error validation text to re-enable
-  if (document.getElementById("ERROR").textContent == "No Errors! :)")
-    saveBtn.removeAttribute("disabled");
+  if (saveBtn) {
+    // Button exists, so you can safely set attributes.
+    console.log("Setting the disabled attribute on the save button.");
+    saveBtn.setAttribute("disabled", "");
 
+    // Checks for error validation text to re-enable
+    let errorText = document.getElementById("ERROR") ? document.getElementById("ERROR").textContent : "ERROR element not found";
+    console.log("Error text content:", errorText);
+
+    if (errorText == "No Errors! :)") {
+      console.log("Removing the disabled attribute from the save button.");
+      saveBtn.removeAttribute("disabled");
+    }
+  } else {
+    // The button doesn't exist in the DOM.
+    console.error("Save button not found: #f_Save");
+  }
 }
+
+
+
+
 function Validate() {
   //Dhanan: Added Js to check for input validation
   let dateCompare = new Date('2000-04-15')
@@ -35,8 +54,21 @@ function Validate() {
   errorMsg = errorMsg.trim()
   //makes the error label show the error message and 
   //aslo shows that there is no error.
-  document.getElementById("ERROR").innerHTML =
-    (errorMsg == "" ? "No Errors! :)" : errorMsg)
+  // document.getElementById("ERROR").innerHTML =
+  //   (errorMsg == "" ? "No Errors! :)" : errorMsg)
 
+  // hideSaveButton();
+
+  //   let errorMsgElement = document.getElementById("ERROR");
+  //   errorMsgElement.innerHTML = (errorMsg == "" ? "No Errors! :)" : errorMsg);
+
+  //   // Call hideSaveButton to update the button state
+  //   hideSaveButton();
+  let errorMsgElement = document.getElementById("ERROR");
+  errorMsgElement.innerHTML = (errorMsg == "" ? "No Errors! :)" : errorMsg);
+
+  console.log("Validation completed. Error message: " + errorMsg);
+
+  // Call hideSaveButton to update the button state
   hideSaveButton();
 }
