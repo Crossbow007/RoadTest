@@ -33,7 +33,7 @@ function hideSaveButton() {
 
 
 function Validate() {
-  //Dhanan: Added Js to check for input validation
+  //Added Js to check for input validation
   let dateCompare = new Date('2000-04-15')
   let dateEntered = new Date(document.getElementById("f_DateStamp").value)
   let errorMsg = ""
@@ -52,18 +52,7 @@ function Validate() {
   }
   //Trims off the trailing and leading whitespace in the error mesage
   errorMsg = errorMsg.trim()
-  //makes the error label show the error message and 
-  //aslo shows that there is no error.
-  // document.getElementById("ERROR").innerHTML =
-  //   (errorMsg == "" ? "No Errors! :)" : errorMsg)
 
-  // hideSaveButton();
-
-  //   let errorMsgElement = document.getElementById("ERROR");
-  //   errorMsgElement.innerHTML = (errorMsg == "" ? "No Errors! :)" : errorMsg);
-
-  //   // Call hideSaveButton to update the button state
-  //   hideSaveButton();
   let errorMsgElement = document.getElementById("ERROR");
   errorMsgElement.innerHTML = (errorMsg == "" ? "No Errors! :)" : errorMsg);
 

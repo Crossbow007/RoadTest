@@ -87,12 +87,11 @@ function addRecordForm(&$mysqlObj,$TableName)
 	name=\"f_Validate\" onclick = \"Validate()\">Validate</button>";
 	
 	displayButton("f_Save", "Save", "","saveButton", "enabled");
-	//echo "<button id=\"f_Save\">Save</button>";
 	displayButton("f_Main","Home","", "Home","enabled");
 	echo "</div>";
 
 	echo "<div class = \"flexContainer\">";
-	 echo "<div id = \"dataEntry\" class = \"flexItem\">";
+	echo "<div id = \"dataEntry\" class = \"flexItem\">";
 	echo "<div class=\"formLabel\">";
 	displayLabel("License Plate");
 	echo "</div>";

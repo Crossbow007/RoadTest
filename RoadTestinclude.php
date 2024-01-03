@@ -75,12 +75,12 @@ function DisplayContactInfo()
     ";
 }
 
-function WriteFooters()
-{
-  DisplayContactInfo(); 
-  echo "</body>\n";
-  echo "</html>\n";
-}
+// function WriteFooters()
+// {
+//   DisplayContactInfo(); 
+//   echo "</body>\n";
+//   echo "</html>\n";
+// }
 
 function CreateConnectionObject()
 {
